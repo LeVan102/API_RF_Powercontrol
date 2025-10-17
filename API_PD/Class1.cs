@@ -121,7 +121,7 @@ namespace API_PD
                 }
         }
         // On
-        private bool On(string onRelayNumber)
+        public bool On(string onRelayNumber)
         {
             _port.DiscardInBuffer();                                                                    //discard input buffer
             if (!_port.IsOpen)                                                                          //condition
@@ -144,17 +144,17 @@ namespace API_PD
                 else { return false; }
         }
         // OFF
-        private bool OFF(string onRelayNumber)
+        private bool OFF(string offRelayNumber)
         {
             _port.DiscardInBuffer();                                                                    //discard input buffer
             if (!_port.IsOpen)                                                                          //condition
                 _port.Open();
-                if (onRelayNumber.Length != 0)                                                        //condition
+                if (offRelayNumber.Length != 0)                                                        //condition
                 {
                     try                                                                                       //do or act
                     {
                         _port.DiscardInBuffer();                                                        //discard input buffer
-                        _port.Write("relay off " + onRelayNumber + "\r");                        //writing "relay on X" command to serial port
+                        _port.Write("relay off " + offRelayNumber + "\r");                        //writing "relay on X" command to serial port
                         System.Threading.Thread.Sleep(10);                                                    //system sleep
                         _port.DiscardOutBuffer();                                                    //discard output buffer
                         return true;
@@ -168,7 +168,7 @@ namespace API_PD
         }
 
         // 5) Reset: đưa tất cả relay về OFF
-        public bool Reset(int delayMs = 10)
+        public bool Reset()
         {
             if (!_port.IsOpen) return false;
             try
@@ -186,7 +186,7 @@ namespace API_PD
             }
         }
         // 6) Control: thực thi các lệnh relay theo giao thức
-        public string Control(ControlCmd cmd, int? channel = null, string? hex = null, int delayMs = 10)
+        public string Control(ControlCmd cmd, int? channel = null, int delayMs = 10)
         {
             if (!_port.IsOpen) return "Port not open";
             try
